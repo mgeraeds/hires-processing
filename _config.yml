@@ -1,8 +1,8 @@
-title: Just the Docs Template
-description: A starter template for a Jeykll site using the Just the Docs theme!
+title: Hi-res model processing repository
+description: A repository for the "hi-res salt intrusion modelling" project code and documentation
 theme: just-the-docs
 
-url: https://just-the-docs.github.io
+url: https://mgeraeds.github.io/hires-processing
 
 aux_links:
   Template Repository: https://github.com/just-the-docs/just-the-docs-template
