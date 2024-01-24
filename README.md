@@ -19,12 +19,12 @@ The main dependencies are:
 
 We recommend installing all dependencies in a new conda environment to avoid clashing of dependencies. 
 
-    ```
+    ``
     conda create --name hires_env python=3.11
     conda activate hires_env
     pip install dfm_tools
     pip install git+https://github.com/mgeraeds/hires-processing.git
-    ```
+    ``
 
 ## Licensing and Attribution
 
