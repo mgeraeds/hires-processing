@@ -18,6 +18,7 @@ The main dependencies are:
 * [xarray](https://github.com/pydata/xarray)
 
 We recommend installing all dependencies in a new conda environment to avoid clashing of dependencies. 
+
     ```
     conda create --name hires_env python=3.11
     conda activate hires_env
