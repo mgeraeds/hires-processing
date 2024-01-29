@@ -346,16 +346,13 @@ def compute_divergence(uds, varname, **kwargs):
 
 if __name__ == '__main__':
 
-    print('Starting client...')
-    client = Client(n_workers=16, threads_per_worker=1, memory_limit="21GB")
-    client.amm.start()  # automatic memory management
-    print('Started client.')
-
     # > Set up argument parsing
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--file', type=str, required=True)
     parser.add_argument('-o', '--out_file', type=str)  # type=dir_path)
-    parser.add_argument('-d', '--drop_variables', nargs='*', type=str)
+    parser.add_argument('-ml', '--memory_limit', type=str, required=True)
+    parser.add_argument('-bc', '--batch_cores', type=str, required=True)
+    # parser.add_argument('-d', '--drop_variables', nargs='*', type=str)
     args = parser.parse_args()
 
     # > Get arguments
@@ -363,6 +360,19 @@ if __name__ == '__main__':
     file_nc = file_nc.replace('_0000_', '_0*_')
     drops = args.drop_variables
     out_file = args.out_file
+    mem_lim = args.memory_limit
+    batch_cores = args.batch_cores
+
+    n_cores = 4
+    n_processes = 4
+    n_workers = n_cores * n_processes
+    max_mem_alloc = 1.75 * int(batch_cores)  # 1.75 = 336/192
+    mem_lim = str(int(np.floor(max_mem_alloc))) + 'GB'  # 336 GiB memory for genoa node
+
+    print('Starting client...')
+    client = Client(n_workers=16, threads_per_worker=1, memory_limit="21GB")
+    client.amm.start()  # automatic memory management
+    print('Started client.')
 
     # Open the partitioned dataset with xarray
     print('Loading large dataset...')
@@ -376,8 +386,8 @@ if __name__ == '__main__':
     # > Select only the relevant variables in the new for gradient computation /
     # > salinity variance analysis. {gridname}_node_z is necessary to keep the
     # > nodal dimension.
-    ds = ds[[f'{gridname}_node_z', f'{gridname}_sa1', f'{gridname}_au', f'{gridname}_vol1', f'{gridname}_u1',
-             f'{gridname}_u0', f'{gridname}_tem1', f'{gridname}_vicwwu']]
+    # ds = ds[[f'{gridname}_node_z', f'{gridname}_sa1', f'{gridname}_au', f'{gridname}_vol1', f'{gridname}_u1',
+    #          f'{gridname}_u0', f'{gridname}_tem1', f'{gridname}_vicwwu']]
 
     # Define counter for possible subdivision of times in writing
     i = 0
@@ -389,26 +399,26 @@ if __name__ == '__main__':
         tds = ds.isel(time=[t])
         print(f'Loaded the dataset at timestep {t}.')
 
-        # > Interpolate all of the edge-based variables to face-based
-        # > variables: vicwwu
-        vicwwu_face = dfmt.uda_to_faces(tds[f'{gridname}_vicwwu'])
-        tds[f'{gridname}_vicwwu'] = vicwwu_face
-
-        # > If i = 0, then it's the first calculation of the script.
-        # > Do all of the things that need to be done only once first.
-        if i == 0:
-            print('Building unit normal vectors...')
-            # w = build_edge_face_weights(tds)
-            unvs = calculate_unit_normal_vectors(tds)
-            print('Unit normal vectors built and saved.')
-        else:
-            pass
-
-        # > Compute the divergence of the u1 variable
-        print(f'Computing the divergence of timestep {t}')
-        divergence_u1 = compute_divergence(tds, f'{gridname}_u1', unvs=unvs)
-        divergence_u1.compute()
-        tds[f'{gridname}_divergence_u1'] = divergence_u1
+        # # > Interpolate all of the edge-based variables to face-based
+        # # > variables: vicwwu
+        # vicwwu_face = dfmt.uda_to_faces(tds[f'{gridname}_vicwwu'])
+        # tds[f'{gridname}_vicwwu'] = vicwwu_face
+        #
+        # # > If i = 0, then it's the first calculation of the script.
+        # # > Do all of the things that need to be done only once first.
+        # if i == 0:
+        #     print('Building unit normal vectors...')
+        #     # w = build_edge_face_weights(tds)
+        #     unvs = calculate_unit_normal_vectors(tds)
+        #     print('Unit normal vectors built and saved.')
+        # else:
+        #     pass
+        #
+        # # > Compute the divergence of the u1 variable
+        # print(f'Computing the divergence of timestep {t}')
+        # divergence_u1 = compute_divergence(tds, f'{gridname}_u1', unvs=unvs)
+        # divergence_u1.compute()
+        # tds[f'{gridname}_divergence_u1'] = divergence_u1
 
         if t == 0:
             # > For t = 0 in the range of timesteps, check if there's a file
@@ -428,6 +438,9 @@ if __name__ == '__main__':
             write_task = dask.delayed(tds.ugrid.to_netcdf(out_file, mode='a'))
 
         write_task.compute()
+        tds.close()
 
         # > Update counter
         i += 1
+
+    client.close()
