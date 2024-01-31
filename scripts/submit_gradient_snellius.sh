@@ -35,4 +35,4 @@ TIMENOW=$(date +"The local start_time is %r")
 echo $TIMENOW
 
 which python3
-python3 $pythonfile -f ${filebase}_0000_map.nc -o $outfile #-d mesh2d_waterdepth mesh2d_hu mesh2d_ucxa mesh2d_ucya mesh2d_Patm mesh2d_windx mesh2d_windy mesh2d_windxu mesh2d_windyu mesh2d_viu mesh2d_turkin1 mesh2d_tureps1 mesh2d_flowelem_ba mesh2d_bldepth mesh2d_flowlink_zu mesh2d_flowlink_zu_bnd # this is for heatflux run data
+python3 $pythonfile -f ${filebase}_0000_map.nc -o $outfile -bc $SLURM_NTASKS #-d mesh2d_waterdepth mesh2d_hu mesh2d_ucxa mesh2d_ucya mesh2d_Patm mesh2d_windx mesh2d_windy mesh2d_windxu mesh2d_windyu mesh2d_viu mesh2d_turkin1 mesh2d_tureps1 mesh2d_flowelem_ba mesh2d_bldepth mesh2d_flowlink_zu mesh2d_flowlink_zu_bnd # this is for heatflux run data
