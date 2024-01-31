@@ -350,27 +350,23 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--file', type=str, required=True)
     parser.add_argument('-o', '--out_file', type=str)  # type=dir_path)
-    parser.add_argument('-ml', '--memory_limit', type=str, required=True)
     parser.add_argument('-bc', '--batch_cores', type=str, required=True)
-    # parser.add_argument('-d', '--drop_variables', nargs='*', type=str)
     args = parser.parse_args()
 
     # > Get arguments
     file_nc = args.file
     file_nc = file_nc.replace('_0000_', '_0*_')
-    drops = args.drop_variables
     out_file = args.out_file
-    mem_lim = args.memory_limit
     batch_cores = args.batch_cores
 
     n_cores = 4
     n_processes = 4
     n_workers = n_cores * n_processes
-    max_mem_alloc = 1.75 * int(batch_cores)  # 1.75 = 336/192
+    max_mem_alloc = 16 * int(batch_cores)  # 1.75 = 768/48 = 16
     mem_lim = str(int(np.floor(max_mem_alloc))) + 'GB'  # 336 GiB memory for genoa node
 
     print('Starting client...')
-    client = Client(n_workers=16, threads_per_worker=1, memory_limit="21GB")
+    client = Client(n_workers=16, threads_per_worker=1, memory_limit=mem_lim)
     client.amm.start()  # automatic memory management
     print('Started client.')
 
