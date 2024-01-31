@@ -15,7 +15,7 @@ _site/
 vendor/
 
 # Ignore documentation folders
-.docs/
+docs/
 
 # Ignore GitHub-created site-generating folders
 .github/
