@@ -355,7 +355,6 @@ if __name__ == '__main__':
 
     # > Get arguments
     file_nc = args.file
-    file_nc = file_nc.replace('_0000_', '_0*_')
     out_file = args.out_file
     batch_cores = args.batch_cores
 
