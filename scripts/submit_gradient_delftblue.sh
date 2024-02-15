@@ -21,7 +21,7 @@ module load miniconda3
 
 # Change working directory to location of the files
 CUR_DIR=$(pwd)
-EXEC_DIR=/projects/HiResData
+SOURCE_DIR=/projects/HiResData
 EXEC_DIR=/scratch/$USER/HRS/test_raw
 #pushd $EXEC_DIR
 # set run directory and go there
