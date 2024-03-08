@@ -21,6 +21,7 @@ if __name__ == '__main__':
 
     # > Get arguments
     file_nc = args.file
+    file_nc = file_nc.replace('_0000_', '_00*_')
     out_file = args.out_file
     batch_cores = args.batch_cores
     geometry_file = args.geometry_file
