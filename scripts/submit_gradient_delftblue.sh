@@ -1,10 +1,10 @@
 #!/bin/bash
 
-#SBATCH --job-name="test-writing"
+#SBATCH --job-name="gr06h00n01t04c064g"
 #SBATCH --output=%x.%j.out
 #SBATCH --error=%x.%j.err
 
-#SBATCH --time=01:00:00
+#SBATCH --time=06:00:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=64G
@@ -19,11 +19,20 @@ module load 2023r1
 module load openmpi
 module load miniconda3
 
+# Set conda env:
+#unset CONDA_SHLVL
+#source "$(conda info --base)/etc/profile.d/conda.sh"
+
+# Activate conda, run job, deactivate conda
+# Make sure to state conda environment name and location accordingly
+conda activate /scratch/$USER/conda/hires_env
+
 # Change working directory to location of the files
 CUR_DIR=$(pwd)
 SOURCE_DIR=/projects/HiResData
 EXEC_DIR=/scratch/$USER/HRS/test_raw
 #pushd $EXEC_DIR
+
 # set run directory and go there
 if [ ! -d "$EXEC_DIR" ]; then
  mkdir -p $EXEC_DIR
@@ -37,13 +46,8 @@ for FILE in $FILES; do
  echo "copying ${FILE}"
 done
 
-# Set conda env:
-#unset CONDA_SHLVL
-#source "$(conda info --base)/etc/profile.d/conda.sh"
-
-# Activate conda, run job, deactivate conda
-# Make sure to state conda environment name and location accordingly
-conda activate /scratch/$USER/conda/hires_env
+# here's where the I/O test should go
+rm RMM_dflowfm_2022_jul21_aug7_sm_0000_map.nc
 
 # > Initialize filenames & script names
 filebase=RMM_dflowfm_2022_jul21_aug7_sm # Change to "_map-file" base name (everything before _map.nc)
