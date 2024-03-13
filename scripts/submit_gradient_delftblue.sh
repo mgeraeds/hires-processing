@@ -5,9 +5,13 @@
 #SBATCH --error=%x.%j.err
 
 #SBATCH --time=06:00:00
-#SBATCH --ntasks=1
+
+#SBATCH --nodes=1
+#SBATCH --ntasks=4
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=64G
+
+##SBATCH --mem=64G
+
 #SBATCH --partition=memory
 #SBATCH --account=research-ceg-he
 
@@ -61,7 +65,7 @@ echo $TIMENOW
 which python3
 #python3 $pythonfile -f ${filebase}_0000_map.nc -o $outfile -bc $SLURM_NTASKS #-d mesh2d_waterdepth mesh2d_hu mesh2d_ucxa mesh2d_ucya mesh2d_Patm mesh2d_windx mesh2d_windy mesh2d_windxu mesh2d_windyu mesh2d_viu mesh2d_turkin1 mesh2d_tureps1 mesh2d_flowelem_ba mesh2d_bldepth mesh2d_flowlink_zu mesh2d_flowlink_zu_bnd # this is for heatflux run data
 # profiler run 
-python3 -m cProfile -s tottime $pythonfile -f ${filebase}_0000_map.nc -o $outfile -bc $SLURM_NTASKS > ~/%x.%j.pro
+python3 -m cProfile -s tottime $pythonfile -f ${filebase}_0001_map.nc -o $outfile -bc $SLURM_NTASKS > ~/%x.%j.pro
 
 echo finished data loading and time-slicing...
 TIMENOW=$(date +"The local start_time is %r")
