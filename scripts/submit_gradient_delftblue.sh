@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name="gr06h00n01t04c064g"
+#SBATCH --job-name="gr06h01n04t04c---g"
 #SBATCH --output=%x.%j.out
 #SBATCH --error=%x.%j.err
 
