@@ -28,11 +28,12 @@ conda activate dfm_proc_env # > Change this to environment with all of the requi
 # > Initialize filenames & script names
 filebase=RMM_dflowfm_2022_jul21_aug7_sm #RMM_dflowfm_2022_B03_aug1_2 # Change to "_map-file" base name
 pythonfile=../src/calc/gradient.py
-outfile= # Change to output location with filename
+outfile=$EXEC_DIR/time_written.nc # Change to output location with filename
 
 echo Starting data loading and time-slicing...
 TIMENOW=$(date +"The local start_time is %r")
 echo $TIMENOW
 
 which python3
-python3 $pythonfile -f ${filebase}_0000_map.nc -o $outfile -bc $SLURM_NTASKS 
+# profiler run 
+python3 -m cProfile -s tottime $pythonfile -f ${filebase}_0001_map.nc -o $outfile -bc $SLURM_NTASKS > ~/%x.%j.pro
