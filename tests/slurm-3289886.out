@@ -1,0 +1,241 @@
+2024-03-13 15:25:10,339 - distributed.nanny - INFO -         Start Nanny at: 'tcp://172.21.12.147:37915'
+2024-03-13 15:25:10,949 - distributed.nanny - INFO -         Start Nanny at: 'tcp://172.21.12.147:35283'
+2024-03-13 15:25:10,957 - distributed.nanny - INFO -         Start Nanny at: 'tcp://172.21.12.147:42851'
+2024-03-13 15:25:10,968 - distributed.nanny - INFO -         Start Nanny at: 'tcp://172.21.12.147:37977'
+2024-03-13 15:26:13,951 - distributed.nanny - INFO - Closing Nanny at 'tcp://172.21.12.147:42851'. Reason: failure-to-start-<class 'TimeoutError'>
+2024-03-13 15:26:13,952 - distributed.nanny - INFO - Closing Nanny at 'tcp://172.21.12.147:37977'. Reason: failure-to-start-<class 'TimeoutError'>
+2024-03-13 15:26:13,953 - distributed.nanny - INFO - Closing Nanny at 'tcp://172.21.12.147:37915'. Reason: failure-to-start-<class 'TimeoutError'>
+2024-03-13 15:26:13,954 - distributed.nanny - INFO - Closing Nanny at 'tcp://172.21.12.147:35283'. Reason: failure-to-start-<class 'TimeoutError'>
+2024-03-13 15:30:19,876 - distributed.worker - INFO -       Start worker at:  tcp://172.21.12.147:34915
+2024-03-13 15:30:19,888 - distributed.worker - INFO -          Listening to:  tcp://172.21.12.147:34915
+2024-03-13 15:30:19,889 - distributed.worker - INFO -           Worker name:           dask-cluster-0-0
+2024-03-13 15:30:19,892 - distributed.worker - INFO -          dashboard at:        172.21.12.147:46501
+2024-03-13 15:30:19,895 - distributed.worker - INFO - Waiting to connect to:    tcp://172.21.12.3:41383
+2024-03-13 15:30:19,897 - distributed.worker - INFO - -------------------------------------------------
+2024-03-13 15:30:19,898 - distributed.worker - INFO -               Threads:                          1
+2024-03-13 15:30:19,899 - distributed.worker - INFO -                Memory:                  44.70 GiB
+2024-03-13 15:30:19,903 - distributed.worker - INFO -       Local Directory: /tmp/dask-scratch-space/worker-w_f5o9rd
+2024-03-13 15:30:19,904 - distributed.worker - INFO - -------------------------------------------------
+2024-03-13 15:30:19,906 - distributed.worker - INFO - Stopping worker at tcp://172.21.12.147:34915. Reason: failure-to-start-<class 'TimeoutError'>
+2024-03-13 15:30:19,908 - distributed.worker - INFO - Closed worker has not yet started: Status.init
+2024-03-13 15:30:19,912 - distributed.nanny - ERROR - Failed to start worker
+Traceback (most recent call last):
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/utils.py", line 1935, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/worker.py", line 1477, in start_unsafe
+    await self._register_with_scheduler()
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/worker.py", line 1179, in _register_with_scheduler
+    comm = await connect(self.scheduler.address, **self.connection_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/comm/core.py", line 342, in connect
+    comm = await wait_for(
+           ^^^^^^^^^^^^^^^
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/utils.py", line 1935, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/comm/tcp.py", line 545, in connect
+    stream = await self.client.connect(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/tornado/tcpclient.py", line 279, in connect
+    af, addr, stream = await connector.start(connect_timeout=timeout)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/core.py", line 664, in start
+    await wait_for(self.start_unsafe(), timeout=timeout)
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/utils.py", line 1934, in wait_for
+    async with asyncio.timeout(timeout):
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/asyncio/timeouts.py", line 115, in __aexit__
+    raise TimeoutError from exc_val
+TimeoutError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/nanny.py", line 967, in run
+    async with worker:
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/core.py", line 678, in __aenter__
+    await self
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/core.py", line 667, in start
+    raise asyncio.TimeoutError(
+TimeoutError: Worker start timed out after 60s.
+2024-03-13 15:30:21,043 - distributed.worker - INFO -       Start worker at:  tcp://172.21.12.147:40749
+2024-03-13 15:30:21,047 - distributed.worker - INFO -          Listening to:  tcp://172.21.12.147:40749
+2024-03-13 15:30:21,046 - distributed.worker - INFO -       Start worker at:  tcp://172.21.12.147:43461
+2024-03-13 15:30:21,048 - distributed.worker - INFO -          Listening to:  tcp://172.21.12.147:43461
+2024-03-13 15:30:21,047 - distributed.worker - INFO -           Worker name:           dask-cluster-0-3
+2024-03-13 15:30:21,050 - distributed.worker - INFO -          dashboard at:        172.21.12.147:39325
+2024-03-13 15:30:21,049 - distributed.worker - INFO -           Worker name:           dask-cluster-0-1
+2024-03-13 15:30:21,052 - distributed.worker - INFO -          dashboard at:        172.21.12.147:36953
+2024-03-13 15:30:21,051 - distributed.worker - INFO - Waiting to connect to:    tcp://172.21.12.3:41383
+2024-03-13 15:30:21,053 - distributed.worker - INFO - -------------------------------------------------
+2024-03-13 15:30:21,052 - distributed.worker - INFO - Waiting to connect to:    tcp://172.21.12.3:41383
+2024-03-13 15:30:21,055 - distributed.worker - INFO - -------------------------------------------------
+2024-03-13 15:30:21,054 - distributed.worker - INFO -               Threads:                          1
+2024-03-13 15:30:21,057 - distributed.worker - INFO -                Memory:                  44.70 GiB
+2024-03-13 15:30:21,056 - distributed.worker - INFO -               Threads:                          1
+2024-03-13 15:30:21,059 - distributed.worker - INFO -                Memory:                  44.70 GiB
+2024-03-13 15:30:21,058 - distributed.worker - INFO -       Local Directory: /tmp/dask-scratch-space/worker-ti65_ukr
+2024-03-13 15:30:21,060 - distributed.worker - INFO - -------------------------------------------------
+2024-03-13 15:30:21,060 - distributed.worker - INFO -       Local Directory: /tmp/dask-scratch-space/worker-z5fj2hgr
+2024-03-13 15:30:21,063 - distributed.worker - INFO - -------------------------------------------------
+2024-03-13 15:30:21,062 - distributed.worker - INFO - Stopping worker at tcp://172.21.12.147:40749. Reason: failure-to-start-<class 'TimeoutError'>
+2024-03-13 15:30:21,065 - distributed.worker - INFO - Closed worker has not yet started: Status.init
+2024-03-13 15:30:21,064 - distributed.worker - INFO - Stopping worker at tcp://172.21.12.147:43461. Reason: failure-to-start-<class 'TimeoutError'>
+2024-03-13 15:30:21,067 - distributed.worker - INFO - Closed worker has not yet started: Status.init
+2024-03-13 15:30:21,068 - distributed.nanny - ERROR - Failed to start worker
+Traceback (most recent call last):
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/utils.py", line 1935, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/worker.py", line 1477, in start_unsafe
+    await self._register_with_scheduler()
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/worker.py", line 1179, in _register_with_scheduler
+    comm = await connect(self.scheduler.address, **self.connection_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/comm/core.py", line 342, in connect
+    comm = await wait_for(
+           ^^^^^^^^^^^^^^^
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/utils.py", line 1935, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/comm/tcp.py", line 545, in connect
+    stream = await self.client.connect(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/tornado/tcpclient.py", line 279, in connect
+    af, addr, stream = await connector.start(connect_timeout=timeout)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/core.py", line 664, in start
+    await wait_for(self.start_unsafe(), timeout=timeout)
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/utils.py", line 1934, in wait_for
+    async with asyncio.timeout(timeout):
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/asyncio/timeouts.py", line 115, in __aexit__
+    raise TimeoutError from exc_val
+TimeoutError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/nanny.py", line 967, in run
+    async with worker:
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/core.py", line 678, in __aenter__
+    await self
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/core.py", line 667, in start
+    raise asyncio.TimeoutError(
+TimeoutError: Worker start timed out after 60s.
+2024-03-13 15:30:21,070 - distributed.nanny - ERROR - Failed to start worker
+Traceback (most recent call last):
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/utils.py", line 1935, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/worker.py", line 1477, in start_unsafe
+    await self._register_with_scheduler()
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/worker.py", line 1179, in _register_with_scheduler
+    comm = await connect(self.scheduler.address, **self.connection_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/comm/core.py", line 342, in connect
+    comm = await wait_for(
+           ^^^^^^^^^^^^^^^
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/utils.py", line 1935, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/comm/tcp.py", line 545, in connect
+    stream = await self.client.connect(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/tornado/tcpclient.py", line 279, in connect
+    af, addr, stream = await connector.start(connect_timeout=timeout)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/core.py", line 664, in start
+    await wait_for(self.start_unsafe(), timeout=timeout)
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/utils.py", line 1934, in wait_for
+    async with asyncio.timeout(timeout):
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/asyncio/timeouts.py", line 115, in __aexit__
+    raise TimeoutError from exc_val
+TimeoutError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/nanny.py", line 967, in run
+    async with worker:
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/core.py", line 678, in __aenter__
+    await self
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/core.py", line 667, in start
+    raise asyncio.TimeoutError(
+TimeoutError: Worker start timed out after 60s.
+2024-03-13 15:30:21,088 - distributed.worker - INFO -       Start worker at:  tcp://172.21.12.147:34901
+2024-03-13 15:30:21,089 - distributed.worker - INFO -          Listening to:  tcp://172.21.12.147:34901
+2024-03-13 15:30:21,090 - distributed.worker - INFO -           Worker name:           dask-cluster-0-2
+2024-03-13 15:30:21,090 - distributed.worker - INFO -          dashboard at:        172.21.12.147:39303
+2024-03-13 15:30:21,091 - distributed.worker - INFO - Waiting to connect to:    tcp://172.21.12.3:41383
+2024-03-13 15:30:21,091 - distributed.worker - INFO - -------------------------------------------------
+2024-03-13 15:30:21,092 - distributed.worker - INFO -               Threads:                          1
+2024-03-13 15:30:21,093 - distributed.worker - INFO -                Memory:                  44.70 GiB
+2024-03-13 15:30:21,093 - distributed.worker - INFO -       Local Directory: /tmp/dask-scratch-space/worker-zx598stk
+2024-03-13 15:30:21,094 - distributed.worker - INFO - -------------------------------------------------
+2024-03-13 15:30:21,096 - distributed.worker - INFO - Stopping worker at tcp://172.21.12.147:34901. Reason: failure-to-start-<class 'TimeoutError'>
+2024-03-13 15:30:21,096 - distributed.worker - INFO - Closed worker has not yet started: Status.init
+2024-03-13 15:30:21,099 - distributed.nanny - ERROR - Failed to start worker
+Traceback (most recent call last):
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/utils.py", line 1935, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/worker.py", line 1477, in start_unsafe
+    await self._register_with_scheduler()
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/worker.py", line 1179, in _register_with_scheduler
+    comm = await connect(self.scheduler.address, **self.connection_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/comm/core.py", line 342, in connect
+    comm = await wait_for(
+           ^^^^^^^^^^^^^^^
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/utils.py", line 1935, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/comm/tcp.py", line 545, in connect
+    stream = await self.client.connect(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/tornado/tcpclient.py", line 279, in connect
+    af, addr, stream = await connector.start(connect_timeout=timeout)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/core.py", line 664, in start
+    await wait_for(self.start_unsafe(), timeout=timeout)
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/utils.py", line 1934, in wait_for
+    async with asyncio.timeout(timeout):
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/asyncio/timeouts.py", line 115, in __aexit__
+    raise TimeoutError from exc_val
+TimeoutError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/nanny.py", line 967, in run
+    async with worker:
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/core.py", line 678, in __aenter__
+    await self
+  File "/home/meggeraeds/.conda/envs/hires_env/lib/python3.11/site-packages/distributed/core.py", line 667, in start
+    raise asyncio.TimeoutError(
+TimeoutError: Worker start timed out after 60s.
+2024-03-13 15:30:22,027 - distributed.nanny - ERROR - Worker process died unexpectedly
+2024-03-13 15:30:23,082 - distributed.nanny - ERROR - Worker process died unexpectedly
+2024-03-13 15:30:23,084 - distributed.nanny - ERROR - Worker process died unexpectedly
+2024-03-13 15:30:23,169 - distributed.nanny - ERROR - Worker process died unexpectedly
+slurmstepd: error: *** JOB 3289886 ON mem010 CANCELLED AT 2024-03-13T15:45:26 ***
