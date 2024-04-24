@@ -9,6 +9,15 @@ import numpy as np
 import warnings
 from src.reduce.validate_input import validate_input
 
+# Set up class to parse dictionaries for the kwargs
+# From: https://sumit-ghosh.com/posts/parsing-dictionary-key-value-pairs-kwargs-argparse-python/
+class ParseKwargs(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        setattr(namespace, self.dest, dict())
+        for value in values:
+            key, value = value.split('=')
+            getattr(namespace, self.dest)[key] = value
+
 
 if __name__ == '__main__':
 
@@ -18,6 +27,7 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--out_file', type=str)  # type=dir_path)
     parser.add_argument('-bc', '--batch_cores', type=str, required=True)
     parser.add_argument('-kv', '--keep_variables', nargs='+', type=str, required=True)
+    parser.add_argument('-c', '--chunks', nargs='*', action=ParseKwargs)
     args = parser.parse_args()
 
     # Get arguments
@@ -25,6 +35,7 @@ if __name__ == '__main__':
     out_file = args.out_file
     batch_cores = args.batch_cores
     keep_variables = args.keep_variables
+    chunks = args.chunks
 
     ## 1. Set up Dask client
     #----------------------------------------------------------------------------------------
@@ -48,7 +59,7 @@ if __name__ == '__main__':
     ## 3. Open the partitioned dataset with xarray
     #----------------------------------------------------------------------------------------
     print('Loading large dataset with time dimension chunked...')
-    ds = dfmt.open_partitioned_dataset(input_files, chunks={'time': 100})
+    ds = dfmt.open_partitioned_dataset(input_files, chunks=chunks)
     print('Large dataset loaded.')
 
     ## 4. Get variables and subset of complete dataset
