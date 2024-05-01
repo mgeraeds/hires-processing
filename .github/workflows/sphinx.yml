@@ -1,0 +1,37 @@
+name: Build and Deploy Sphinx Documentation
+
+on:
+  push:
+    branches:
+      - 9-develop-optimizing-documentation  # Set to your default branch
+  pull_request:
+    branches:
+      - 9-develop-optimizing-documentation  # Set to your default branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        persist-credentials: false  # Required for JamesIves/github-pages-deploy-action
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install sphinx sphinx-rtd-theme
+
+    - name: Build documentation
+      run: |
+        sphinx-build -b html docs/ _build/html  # Adjust paths based on your Sphinx source and build directories
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./_build/html
