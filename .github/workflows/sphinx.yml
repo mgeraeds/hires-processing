@@ -28,7 +28,7 @@ jobs:
 
     - name: Build documentation
       run: |
-        sphinx-build -b html docs/ _build/html  # Adjust paths based on your Sphinx source and build directories
+        sphinx-build -b html . _build/html  # Adjust paths based on your Sphinx source and build directories
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
