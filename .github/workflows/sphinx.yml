@@ -3,10 +3,10 @@ name: Build and Deploy Sphinx Documentation
 on:
   push:
     branches:
-      - 9-develop-optimizing-documentation  # Set to your default branch
+      - gh-pages  # Set to your default branch
   pull_request:
     branches:
-      - 9-develop-optimizing-documentation  # Set to your default branch
+      - gh-pages  # Set to your default branch
 
 jobs:
   build-and-deploy:
