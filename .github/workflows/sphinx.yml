@@ -3,10 +3,7 @@ name: Build and Deploy Sphinx Documentation
 on:
   push:
     branches:
-      - gh-pages  # Set to your default branch
-  pull_request:
-    branches:
-      - gh-pages  # Set to your default branch
+      - main  # Set to your default branch
 
 jobs:
   build-and-deploy:
@@ -36,3 +33,5 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./_build/html
+        publish_branch: gh-pages
+
