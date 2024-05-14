@@ -139,9 +139,9 @@ def reduce_dataset(files, out_file, keep_vars, **kwargs):
             vds.to_netcdf(out_file, mode='a', compute=True, encoding=encoding_sub)
 
         # writing_task.compute()
-        vds.close()
-
+        # vds.close()
         print_and_log(f"Outputfile: {out_file}")
+        
         # > Update counter
         i += 1
 
@@ -177,15 +177,89 @@ if __name__ == '__main__':
     #----------------------------------------------------------------------------------------
     mem_lim = str(int(np.floor(max_mem))) + 'GB'
 
-    print_and_log(f"Allocated memory to the dask client is {mem_lim}.")
+    print(f"Allocated memory to the dask client is {mem_lim}.")
 
-    print_and_log('Starting client...')
+    print('Starting client...')
     client = Client(n_workers=int(n_processes), memory_limit=mem_lim)
     client.amm.start() # automatic memory management
 
     # 2. Apply reduce_dataset function
     #----------------------------------------------------------------------------------------
-    reduce_dataset(files=files, out_file=out_file, keep_vars=keep_vars, chunks=chunks, encoding=encoding, time_slice=time_slice)
+    # reduce_dataset(files=files, out_file=out_file, keep_vars=keep_vars, chunks=chunks, encoding=encoding, time_slice=time_slice)
+    input_files = files
+
+    ## 3. Open the partitioned dataset with xarray
+    #----------------------------------------------------------------------------------------
+    print('Loading large dataset...')
+    try:
+        ds = dfmt.open_partitioned_dataset(input_files, chunks=chunks)
+    except:
+        try:
+            ds = xr.open_dataset(input_files, chunks=chunks)
+        except:
+            raise Exception('Could not load files. Check your inputs and/or regex.')
+        
+    print('Large dataset loaded.')
+
+    ## 4. Get variables and subset of complete dataset
+    #----------------------------------------------------------------------------------------
+    # Define counter for possible subdivision of times in writing
+    i = 0
+
+    # > If it's an unstructured xu.UgridDataset, make the dataset into an xr.Dataset
+    if isinstance(ds, xu.core.wrap.UgridDataset):
+        # > We need to store the hidden information as well, so get those variables
+        hidden_vars = list(ds.ugrid.grid.to_dataset().variables)
+        # > Add them to the keep_vars list
+        keep_vars = keep_vars + hidden_vars
+        # > Make the original dataset into an xr.Dataset
+        ds = ds.ugrid.to_dataset()
+        # > Only get the reduced dataset with keep_vars
+        ds = ds[keep_vars]
+        
+    else:
+        ds = ds[keep_vars]
+
+    # > Select the required time period (if indicated)
+    try:
+        tds = ds.isel(time=time_slice)
+    except:
+        try:
+            tds = ds.sel(time_slice=time_slice)
+        except:
+            tds = ds
+
+    for v in keep_vars:
+
+        # > Select the time
+        print(f'Starting selection of variable {v}...')
+        vds = tds[v] 
+
+        # > If there's encoding specified, make a subset for the variables in that dataset only
+        var_list = list(vds.coords) + [vds.name]
+        encoding_sub = dict(ChainMap(*[{f"{v}": encoding[v]} for v in var_list if v in encoding]))
+
+        if i == 0:
+            # > For t = 0 in the range of timesteps, check if there's a file
+            # > already present. If it is, remove it.
+            if os.path.isfile(out_file):
+                os.remove(out_file)
+
+            # Use dask.delayed to write file to disk
+            print('Writing file to disk...')
+            vds.to_netcdf(out_file, mode='w', compute=True, encoding=encoding_sub)
+
+        else:
+            # Use dask.delayed to write file to disk
+            print('Writing file to disk in append mode...')
+            vds.to_netcdf(out_file, mode='a', compute=True, encoding=encoding_sub)
+
+        # writing_task.compute()
+        vds.close()
+
+        print(f"Outputfile: {out_file}")
+        # > Update counter
+        i += 1
 
     # 3. Close the client
     #----------------------------------------------------------------------------------------
