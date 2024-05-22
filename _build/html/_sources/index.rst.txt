@@ -10,6 +10,7 @@ Welcome to hires-processing's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   validate
 
 
 Indices and tables
