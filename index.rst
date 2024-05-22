@@ -6,11 +6,16 @@
 Welcome to hires-processing's documentation!
 ============================================
 
+.. include:: README.md
+   :parser: myst_parser.sphinx_
+
+.. include:: requirements.txt
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-
+   docs/validate
 
 Indices and tables
 ==================
