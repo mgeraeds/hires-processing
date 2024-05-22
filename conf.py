@@ -17,6 +17,11 @@ release = '0.0.1'
 extensions = [
 #    'recommonmark',
     'myst_parser',
+
+    'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.napoleon',
 ]
 
 # Specify the suffix of source filenames.
