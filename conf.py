@@ -36,3 +36,8 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 html_theme = 'sphinx_book_theme'
 html_static_path = ['_static']
+
+# Specifying file/folder paths to document-------------------------------------
+
+import sys, os
+sys.path.insert(0, os.path.abspath('../src'))
