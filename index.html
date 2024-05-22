@@ -43,6 +43,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="validate module" href="docs/validate.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -145,7 +146,11 @@
  </script></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="docs/validate.html">validate module</a></li>
+</ul>
+
     </div>
 </nav></div>
     </div>
@@ -292,7 +297,17 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Welcome to hires-processing’s documentation!</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Welcome to hires-processing’s documentation!</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hi-resolution-model-processing-toolbox">Hi-resolution model processing toolbox</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#user-documentation">User documentation</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#licensing-and-attribution">Licensing and Attribution</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 
@@ -308,7 +323,68 @@ document.write(`
                   
   <section id="welcome-to-hires-processing-s-documentation">
 <h1>Welcome to hires-processing’s documentation!<a class="headerlink" href="#welcome-to-hires-processing-s-documentation" title="Link to this heading">#</a></h1>
+<section id="hi-resolution-model-processing-toolbox">
+<h2>Hi-resolution model processing toolbox<a class="headerlink" href="#hi-resolution-model-processing-toolbox" title="Link to this heading">#</a></h2>
+<section id="user-documentation">
+<h3>User documentation<a class="headerlink" href="#user-documentation" title="Link to this heading">#</a></h3>
+<p>More in-depth documentation can be found in the <a class="reference external" href="https://mgeraeds.github.io/hires-processing">readthedocs</a>.</p>
+<section id="installation">
+<h4>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h4>
+<p><strong>Prerequisites</strong></p>
+<ul class="simple">
+<li><p>Python 3.9 - 3.11 (Python 3.11 is recommended)</p></li>
+<li><p>Anaconda (recommended)</p></li>
+</ul>
+<p><strong>Dependencies</strong>
+The main dependencies are:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/Deltares/dfm_tools?tab=readme-ov-file">dfm_tools</a></p></li>
+<li><p><a class="reference external" href="https://github.com/Deltares/xugrid">xugrid</a></p></li>
+<li><p><a class="reference external" href="https://github.com/dask/dask">dask</a></p></li>
+<li><p><a class="reference external" href="https://github.com/pydata/xarray">xarray</a></p></li>
+</ul>
+<p>We recommend installing all dependencies in a new conda environment to avoid clashing of dependencies.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>``
+conda create --name hires_env python=3.11
+conda activate hires_env
+pip install dfm_tools
+pip install git+https://github.com/mgeraeds/hires-processing.git
+``
+</pre></div>
+</div>
+</section>
+</section>
+<section id="licensing-and-attribution">
+<h3>Licensing and Attribution<a class="headerlink" href="#licensing-and-attribution" title="Link to this heading">#</a></h3>
+<p>This repository is licensed under the [MIT License]. You are generally free to reuse or extend upon this code as you see fit; just include the original copy of the license (which is preserved when you “make a template”). While it’s not necessary, we’d love to hear from you if you do use this template, and how we can improve it for future use!</p>
+<p>The deployment GitHub Actions workflow is heavily based on GitHub’s mixed-party [starter workflows]. A copy of their MIT License is available in [actions/starter-workflows].</p>
+</section>
+</section>
+<p>scipy
+numpy
+matplotlib
+pandas
+shapely&gt;=1.7.0
+geopandas
+fiona&gt;=1.9
+contextily
+xarray
+dask[complete]
+netcdf4&gt;=1.5.3
+bottleneck
+xugrid&gt;=0.6.1
+pydap&gt;=3.3.0
+hydrolib-core&gt;=0.5.1
+meshkernel&gt;=2.1.0
+dfm_tools</p>
 <div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="docs/validate.html">validate module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docs/validate.html#reduce.validate.validate_input"><code class="docutils literal notranslate"><span class="pre">validate_input()</span></code></a></li>
+</ul>
+</li>
+</ul>
 </div>
 </section>
 <section id="indices-and-tables">
@@ -331,6 +407,15 @@ document.write(`
                 <footer class="prev-next-footer">
                   
 <div class="prev-next-area">
+    <a class="right-next"
+       href="docs/validate.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">validate module</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
@@ -347,7 +432,17 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Welcome to hires-processing’s documentation!</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Welcome to hires-processing’s documentation!</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hi-resolution-model-processing-toolbox">Hi-resolution model processing toolbox</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#user-documentation">User documentation</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#licensing-and-attribution">Licensing and Attribution</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 
