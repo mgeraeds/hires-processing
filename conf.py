@@ -44,5 +44,22 @@ html_static_path = ['_static']
 
 # Specifying file/folder paths to document-------------------------------------
 
-import sys, os
-sys.path.insert(0, os.path.abspath('../src'))
+import os
+import sys
+from unittest.mock import MagicMock
+
+print("Python path:", sys.path)
+print("")
+sys.path.insert(0, os.path.abspath('src'))
+print("Updated Python path:", sys.path)
+print("")
+
+# Mock modules that are not installed
+class Mock(MagicMock):
+    @classmethod
+    def __getattr__(cls, name):
+        return MagicMock()
+
+MOCK_MODULES = ['xarray']
+sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
+
