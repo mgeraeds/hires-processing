@@ -43,7 +43,7 @@ def parse_slice(time_slice):
 
 def print_and_log(text):
     print(text)
-    with open("logfile.txt", "a") as logfile:
+    with open("logfile_append.txt", "a") as logfile:
         logfile.write(text+"\n")
 
 def reduce_dataset(files, out_file, keep_vars, **kwargs): 
@@ -67,7 +67,7 @@ def reduce_dataset(files, out_file, keep_vars, **kwargs):
     # Define counter for possible subdivision of times in writing
     if os.path.isfile(os.path.join(os.getcwd(), 'logfile.txt')):
             os.remove(os.path.join(os.getcwd(), 'logfile.txt'))
-            
+
     print_and_log(client.dashboard_link)
     print_and_log(f'Used keyword arguments are: {kwargs}')
 
@@ -120,34 +120,82 @@ def reduce_dataset(files, out_file, keep_vars, **kwargs):
 
     # All delayed tasks are collected in a list to then be computed in one go using dask.compute
     delayed_tasks = []
+    
+    i = 0
+    # for v in keep_vars:
+    #     # > Print the time to check the parallelisation
+    #     print_and_log(f'The time is: {datetime.now()}')
 
-    for v in keep_vars:
-        # > Print the time to check the parallelisation
+    #     # > Make an out_file name  per variable that is looped over
+    #     out_file_v = out_file.split('.nc')[0] + f'_{v}.nc'
+
+    #     # > Select the time
+    #     print_and_log(f'Starting selection of variable {v}...')
+    #     vds = tds[v]
+
+    #     # > If there's encoding specified, make a subset for the variables in that dataset only
+    #     var_list = list(vds.coords) + [vds.name]
+    #     encoding_sub = dict(ChainMap(*[{f"{var}": encoding[var]} for var in var_list if encoding and var in encoding]))
+
+    #     # > For t = 0 in the range of timesteps, check if there's a file already present. If it is, remove it.
+    #     if os.path.isfile(out_file_v):
+    #         os.remove(out_file_v)
+
+    #     if i == 0:
+    #         # > For t = 0 in the range of timesteps, check if there's a file
+    #         # > already present. If it is, remove it.
+    #         if os.path.isfile(out_file):
+    #             os.remove(out_file)
+
+    #         # Use dask.delayed to write file to disk
+    #         print_and_log('Writing file to disk...')
+    #         delayed_task = dask.delayed(vds.to_netcdf)(out_file, mode='w', compute=False, encoding=encoding_sub)
+
+    #     else:
+    #         # Use dask.delayed to write file to disk
+    #         print_and_log('Writing file to disk in append mode...')
+    #         delayed_task = dask.delayed(ds.to_netcdf)(out_file, mode='a', compute=False, encoding=encoding_sub)
+
+    #     # Use dask.delayed to write file to disk
+    #     # print_and_log('Writing file to disk...')
+    #     # delayed_task = dask.delayed(vds.to_netcdf)(out_file_v, mode='w', compute=True, encoding=encoding_sub)
+    #     delayed_tasks.append(delayed_task)
+    #     print_and_log(f"Outputfile: {out_file}")
+    #     i += 1
+
+    # # Compute all delayed tasks; should ensure proper file closing at the end
+    # print_and_log('Computing all delayed tasks...')
+    # dask.compute(*delayed_tasks)
+    # print_and_log('All tasks computed and files closed.')
+
+    for ts, t in enumerate(tds.time):
+
         print_and_log(f'The time is: {datetime.now()}')
 
-        # > Make an out_file name  per variable that is looped over
-        out_file_v = out_file.split('.nc')[0] + f'_{v}.nc'
+        # > Make an out_file name time that is looped over
+        out_file_t = out_file.split('.nc')[0] + f'_{ts}.nc'
 
         # > Select the time
-        print_and_log(f'Starting selection of variable {v}...')
-        vds = tds[v]
+        print_and_log(f'Starting selection of time {t}...')
+        vds = tds.sel(time=t)
 
         # > If there's encoding specified, make a subset for the variables in that dataset only
-        var_list = list(vds.coords) + [vds.name]
+        var_list = list(vds.coords) + list(vds.variables)
         encoding_sub = dict(ChainMap(*[{f"{var}": encoding[var]} for var in var_list if encoding and var in encoding]))
 
         # > For t = 0 in the range of timesteps, check if there's a file already present. If it is, remove it.
-        if os.path.isfile(out_file_v):
-            os.remove(out_file_v)
+        if os.path.isfile(out_file_t):
+            os.remove(out_file_t)
 
         # Use dask.delayed to write file to disk
         print_and_log('Writing file to disk...')
-        delayed_task = dask.delayed(vds.to_netcdf)(out_file_v, mode='w', compute=True, encoding=encoding_sub)
-    
-        delayed_tasks.append(delayed_task)
-        print_and_log(f"Outputfile: {out_file_v}")
+        delayed_task = dask.delayed(vds.to_netcdf)(out_file_t, mode='w', compute=False, encoding=encoding_sub)
 
-    # Compute all delayed tasks; should ensure proper file closing at the end
+        delayed_tasks.append(delayed_task)
+        print_and_log(f"Outputfile: {out_file_t}")
+        i += 1
+
+    # # Compute all delayed tasks; should ensure proper file closing at the end
     print_and_log('Computing all delayed tasks...')
     dask.compute(*delayed_tasks)
     print_and_log('All tasks computed and files closed.')
@@ -189,6 +237,7 @@ if __name__ == '__main__':
     client = Client(n_workers=int(n_processes), threads_per_worker=1, memory_limit=mem_lim)
     client.amm.start() # automatic memory management
     print_and_log(client.dashboard_link)
+
     # 2. Apply reduce_dataset function
     #----------------------------------------------------------------------------------------
     reduce_dataset(files=files, out_file=out_file, keep_vars=keep_vars, chunks=chunks, encoding=encoding, time_slice=time_slice)
