@@ -7,7 +7,7 @@ import warnings
 from dask.distributed import Client
 import glob
 from datetime import datetime
-
+import pandas as pd
 import xarray as xr
 import xugrid as xu
 import numpy as np
@@ -27,17 +27,21 @@ class ParseKwargs(argparse.Action):
 
 def parse_slice(time_slice):
     """
-    Function that transforms a list input to a slice.
+    Function that transforms a string input to a slice.
     TODO: docstring formatted for Sphinx
     """
-    if time_slice == ['all']:
-        time_slice = slice(None)
-        return time_slice
+    if time_slice == 'all':
+        return slice(None)
     try:
-        time_slice = slice(*time_slice)
-    except ValueError:
-        if len(time_slice) > 3:
-                raise ValueError('Input of time_slice argument gives incorrect slice.')
+        section = int(time_slice)
+    except:
+        try:
+            section = [int(s) if s else None for s in time_slice.split(':')] # slice(*time_slice)
+        except:
+            section = [pd.to_datetime(s) if s else None for s in time_slice.split(':')]
+        if len(section) > 3:
+            raise ValueError('Input of time_slice argument gives incorrect slice.')
+        time_slice = slice(*section)
         
     return time_slice
 
@@ -109,12 +113,14 @@ def reduce_dataset(files, out_file, keep_vars, **kwargs):
     else:
         ds = ds[keep_vars]
 
+    print_and_log(f'the time sliced is {time_slice}')
+
     # > Select the required time period (if indicated)
     try:
         tds = ds.isel(time=time_slice)
     except:
         try:
-            tds = ds.sel(time_slice=time_slice)
+            tds = ds.sel(time=time_slice)
         except:
             tds = ds
 
@@ -122,53 +128,14 @@ def reduce_dataset(files, out_file, keep_vars, **kwargs):
     delayed_tasks = []
     
     i = 0
-    # for v in keep_vars:
-    #     # > Print the time to check the parallelisation
-    #     print_and_log(f'The time is: {datetime.now()}')
+    total_time_length = len(tds.time)
+    steps = 2
 
-    #     # > Make an out_file name  per variable that is looped over
-    #     out_file_v = out_file.split('.nc')[0] + f'_{v}.nc'
+    slice_amounts = total_time_length / steps
+    sliced_idx = np.arange(0, total_time_length, slice_amounts)
 
-    #     # > Select the time
-    #     print_and_log(f'Starting selection of variable {v}...')
-    #     vds = tds[v]
-
-    #     # > If there's encoding specified, make a subset for the variables in that dataset only
-    #     var_list = list(vds.coords) + [vds.name]
-    #     encoding_sub = dict(ChainMap(*[{f"{var}": encoding[var]} for var in var_list if encoding and var in encoding]))
-
-    #     # > For t = 0 in the range of timesteps, check if there's a file already present. If it is, remove it.
-    #     if os.path.isfile(out_file_v):
-    #         os.remove(out_file_v)
-
-    #     if i == 0:
-    #         # > For t = 0 in the range of timesteps, check if there's a file
-    #         # > already present. If it is, remove it.
-    #         if os.path.isfile(out_file):
-    #             os.remove(out_file)
-
-    #         # Use dask.delayed to write file to disk
-    #         print_and_log('Writing file to disk...')
-    #         delayed_task = dask.delayed(vds.to_netcdf)(out_file, mode='w', compute=False, encoding=encoding_sub)
-
-    #     else:
-    #         # Use dask.delayed to write file to disk
-    #         print_and_log('Writing file to disk in append mode...')
-    #         delayed_task = dask.delayed(ds.to_netcdf)(out_file, mode='a', compute=False, encoding=encoding_sub)
-
-    #     # Use dask.delayed to write file to disk
-    #     # print_and_log('Writing file to disk...')
-    #     # delayed_task = dask.delayed(vds.to_netcdf)(out_file_v, mode='w', compute=True, encoding=encoding_sub)
-    #     delayed_tasks.append(delayed_task)
-    #     print_and_log(f"Outputfile: {out_file}")
-    #     i += 1
-
-    # # Compute all delayed tasks; should ensure proper file closing at the end
-    # print_and_log('Computing all delayed tasks...')
-    # dask.compute(*delayed_tasks)
-    # print_and_log('All tasks computed and files closed.')
-
-    for ts, t in enumerate(tds.time):
+    # for ts, t in enumerate(tds.time):
+    for ts, id in enumerate(sliced_idx[:-1]):
 
         print_and_log(f'The time is: {datetime.now()}')
 
@@ -176,8 +143,10 @@ def reduce_dataset(files, out_file, keep_vars, **kwargs):
         out_file_t = out_file.split('.nc')[0] + f'_{ts}.nc'
 
         # > Select the time
-        print_and_log(f'Starting selection of time {t}...')
-        vds = tds.sel(time=t)
+        # print_and_log(f'Starting selection of time {t}...')
+        # vds = tds.sel(time=t)
+        print_and_log(f'Starting selection of time steps {sliced_idx[ts]} to {sliced_idx[ts+1]}')
+        vds = tds.isel(time=slice(int(sliced_idx[ts]), int(sliced_idx[ts+1])))
 
         # > If there's encoding specified, make a subset for the variables in that dataset only
         var_list = list(vds.coords) + list(vds.variables)
@@ -189,7 +158,7 @@ def reduce_dataset(files, out_file, keep_vars, **kwargs):
 
         # Use dask.delayed to write file to disk
         print_and_log('Writing file to disk...')
-        delayed_task = dask.delayed(vds.to_netcdf)(out_file_t, mode='w', compute=False, encoding=encoding_sub)
+        delayed_task = dask.delayed(vds.to_netcdf)(out_file_t, mode='w', compute=True, encoding=encoding_sub)
 
         delayed_tasks.append(delayed_task)
         print_and_log(f"Outputfile: {out_file_t}")
@@ -212,7 +181,7 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--chunks', nargs='*', action=ParseKwargs, help="the desired chunks, given as <dimension>=n_chunks")
     # parser.add_argument('-v', '--validate_input', default=False, type=bool, help="boolean defining whether to validate the input regex or not")
     parser.add_argument('-e', '--encoding', default={}, type=json.loads, help="dictionary defining the encoding passed to the to_netcdf call")
-    parser.add_argument('-t', '--time_slice', type=parse_slice, nargs='+', default='all', help="slice or time (int or specific time) to select for the output file")
+    parser.add_argument('-t', '--time_slice', type=parse_slice, default='all', help="slice or time (int or specific time) to select for the output file")
 
     args = parser.parse_args()
 
