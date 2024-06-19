@@ -141,7 +141,7 @@ def reduce_dataset(files, out_file, keep_vars, **kwargs):
         # writing_task.compute()
         # vds.close()
         print_and_log(f"Outputfile: {out_file}")
-        
+
         # > Update counter
         i += 1
 
@@ -255,7 +255,7 @@ if __name__ == '__main__':
             vds.to_netcdf(out_file, mode='a', compute=True, encoding=encoding_sub)
 
         # writing_task.compute()
-        vds.close()
+        # vds.close()
 
         print(f"Outputfile: {out_file}")
         # > Update counter
